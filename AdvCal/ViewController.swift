@@ -12,9 +12,10 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var txtNumber: UITextField!
     
-    var firstNumber: Double = 0
+    var firstNumber: Int = 0
     var currentOperation: String = ""
     var performingOperation = false
+    var resultJustDisplayed = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,11 +25,13 @@ class ViewController: UIViewController {
     
     @IBAction func btnNumber(_ sender: Any) {
         let btn = sender as! UIButton
-        let num = (btn.titleLabel?.text)!        
+        let num = (btn.titleLabel?.text)!
         
-        if performingOperation {
+        
+        if performingOperation || resultJustDisplayed{
             txtNumber.text = ""
             performingOperation = false
+            resultJustDisplayed = false
         }
         
         if txtNumber.text == "0" {
@@ -43,7 +46,7 @@ class ViewController: UIViewController {
         let btn = sender as! UIButton
         let op = (btn.titleLabel?.text)!
         
-        if let value = Double(txtNumber.text!){
+        if let value = Int(txtNumber.text!){
             firstNumber = value
         }
         
@@ -53,8 +56,8 @@ class ViewController: UIViewController {
     
     
     @IBAction func btnEqual(_ sender: Any) {
-        if let secondNumber  = Double(txtNumber.text!){
-            var result: Double = 0
+        if let secondNumber  = Int(txtNumber.text!){
+            var result: Int = 0
             
             switch currentOperation {
             case "+":
@@ -66,13 +69,15 @@ class ViewController: UIViewController {
             case "/":
                 result = secondNumber != 0 ? firstNumber / secondNumber : 0
             case "%":
-                result = firstNumber.truncatingRemainder(dividingBy: secondNumber)
+                result = firstNumber % secondNumber
             default:
                 result = secondNumber
             }
             
             txtNumber.text = String(result)
+            firstNumber = result
             performingOperation = false
+            resultJustDisplayed = true
         }
     }
     
@@ -84,7 +89,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func btnPlusMinus(_ sender: Any) {
-        if var value = Double(txtNumber.text!) {
+        if var value = Int(txtNumber.text!) {
             value = -value
             txtNumber.text = String(value)
         }
